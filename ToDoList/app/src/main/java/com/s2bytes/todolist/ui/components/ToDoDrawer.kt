@@ -77,9 +77,9 @@ import com.s2bytes.todolist.ui.theme.ToDoListTheme
             Modifier.fillMaxWidth().padding(top = 10.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ){
-            MediaIcon(R.drawable.ic_github){ onClick("Github") }
-            MediaIcon(R.drawable.ic_linkedin){ onClick("LinkedIn") }
-            MediaIcon(R.drawable.ic_twitter){ onClick("Twitter") }
+            MediaButtons(R.drawable.ic_github){ onClick("Github") }
+            MediaButtons(R.drawable.ic_linkedin){ onClick("LinkedIn") }
+            MediaButtons(R.drawable.ic_twitter){ onClick("Twitter") }
         }
     }
 }
@@ -110,7 +110,7 @@ import com.s2bytes.todolist.ui.theme.ToDoListTheme
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
     )
 }
-@Composable private fun MediaIcon(@DrawableRes iconId:Int, onClick:()->Unit){
+@Composable private fun MediaButtons(@DrawableRes iconId:Int, onClick:()->Unit){
     IconButton(onClick, modifier = Modifier.size(50.dp)){
         Icon(
             painterResource(iconId), null,
@@ -123,7 +123,7 @@ import com.s2bytes.todolist.ui.theme.ToDoListTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToDoDrawerContent(
+fun ToDoDrawerSheet(
     tasksRatio:Float=1f, onMediaClicked:(String)->Unit={},
     onItemClicked:(String)->Unit={}
 ){
@@ -154,13 +154,13 @@ fun ToDoDrawerContent(
 @Composable
 fun DrawerPreview() {
     ToDoListTheme {
-        ToDoDrawerContent()
+        ToDoDrawerSheet()
     }
 }
 @Preview(uiMode = UI_MODE_NIGHT_NO)
 @Composable
 fun DrawerPreview2() {
     ToDoListTheme {
-        ToDoDrawerContent(.28f)
+        ToDoDrawerSheet(.28f)
     }
 }

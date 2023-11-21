@@ -30,16 +30,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        setContentView(
-            ComposeView(this).apply {
-                consumeWindowInsets = false
-                setContent {
-                    ToDoListTheme {
-                        // A surface container using the 'background' color from the theme
-                        HomePage()
-                    }
-                }
+        setContent {
+            ToDoListTheme {
+                // A surface container using the 'background' color from the theme
+                HomePage()
             }
-        )
+        }
     }
 }
