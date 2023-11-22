@@ -92,8 +92,8 @@ val ToDoTypography = Typography(
         letterSpacing = 0.15.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = MontserratFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontFamily = KarlaFontFamily,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.25.sp
