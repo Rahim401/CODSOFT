@@ -17,6 +17,7 @@ enum class SortTaskBy(val type:Int, val isDescending:Boolean = false){
     ByTitle(3), ByTitleDescending(3, true),
 }
 
+val dateFormat = SimpleDateFormat("MMM d yyyy, EEE", Locale.US)
 fun sortToDoListBy(msgList:List<ToDoMessage>, sortBy:SortTaskBy): Pair<List<ToDoMessage>,Map<Int,String>>{
     val sortedList = when(sortBy){
         SortTaskBy.ByIsChecked -> msgList.sortedBy { if(it.isDone) 0 else 1 }
@@ -37,8 +38,7 @@ fun sortToDoListBy(msgList:List<ToDoMessage>, sortBy:SortTaskBy): Pair<List<ToDo
         headerMap[sortedList.count { !it.isDone }] = "Tasks Completed"
     }
     else if(sortBy.type==2) sortedList.forEachIndexed { idx, msg ->
-        var msgDate = SimpleDateFormat("MMM d yyyy, EEE", Locale.getDefault())
-            .format(Date(msg.timeStamp))
+        var msgDate = dateFormat.format(Date(msg.timeStamp))
         msgDate = "on $msgDate"
         if(!headerMap.containsValue(msgDate))
             headerMap[idx] = msgDate
@@ -46,3 +46,17 @@ fun sortToDoListBy(msgList:List<ToDoMessage>, sortBy:SortTaskBy): Pair<List<ToDo
 
     return Pair(sortedList, headerMap)
 }
+
+val fakeTaskList = mutableListOf(
+    ToDoMessage("Upload Release","The long 10Days Development v1.2.6 has finally completed," +
+            " and we need to upload this as soon as we can," +
+            " to get this shit out of out mind", timeStamp = 1700238297
+    ),
+    ToDoMessage("Do Project"),
+    ToDoMessage("Wake at 7am","I hop i would Do this"),
+    ToDoMessage("Complete Rdr2","There are 23 missions left to finish", timeStamp = 1700528297),
+    ToDoMessage("Download Musics","HipHop Thamizha's musics left to download", true, timeStamp = 1702238297)
+)
+
+fun addTask(task:ToDoMessage) = fakeTaskList.add(task)
+fun deleteTask(task:ToDoMessage) = fakeTaskList.remove(task)
