@@ -1,17 +1,28 @@
 package com.s2bytes.todolist.ui.components
 
 import android.content.res.Configuration
+import android.graphics.drawable.Icon
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ShapeDefaults
@@ -26,11 +37,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.s2bytes.todolist.R
 import com.s2bytes.todolist.data.ToDoMessage
 import com.s2bytes.todolist.data.dateFormat
 import com.s2bytes.todolist.ui.theme.ToDoListTheme
@@ -78,11 +92,11 @@ fun ToDoViewer(msg:ToDoMessage, onEdit:()->Unit = {}, onDelete:()->Unit = {}, on
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
                 Text(
-                    msg.title,
+                    msg.title, Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.headlineSmall.copy(lineHeight = 25.sp)
                 )
                 if(msg.desc.isNotBlank()) Text(
-                    msg.desc, Modifier.padding(top = 8.dp),
+                    msg.desc, Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Row(
@@ -164,6 +178,62 @@ fun ToDoEditor(
     }
 }
 
+@Composable
+fun SelectorSingleItem(
+    iconId:Int, name:String,
+    onClick: ()-> Unit
+) {
+    Row(
+        modifier = Modifier.clip(ShapeDefaults.Medium)
+            .background(MaterialTheme.colorScheme.primary.copy(0.2f))
+            .clickable { onClick() }.fillMaxWidth().padding(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Icon(
+            painterResource(iconId),null,
+            modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp)
+        )
+        Text(name)
+    }
+}
+
+@Composable
+fun SelectorDialog(
+    title:String, options: List<Pair<Int,String>>,
+    onSelected: (Int) -> Unit,
+    onDismiss: () -> Unit = {}
+) {
+
+    Dialog(onDismiss) {
+        Surface(
+            shape = ShapeDefaults.Medium,
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 6.dp, modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.headlineSmall,
+                )
+                LazyColumn(
+                    Modifier.padding(top=14.dp).fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ){
+                    itemsIndexed(options){idx,(iconId,name) ->
+                        SelectorSingleItem(iconId,name){
+                            onSelected(idx)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun DialogPreview3() {
@@ -183,6 +253,35 @@ fun DialogPreview() {
 @Composable
 fun DialogPreview2() {
     ToDoListTheme {
-        ToDoViewer(ToDoMessage("Fuck the Fish","To the Hell"))
+        SelectorSingleItem(R.drawable.ic_sort_alphabetical_ascending, "Alphabetical Ascending"){}
+//        ToDoSelectorDialog(
+//            listOf(
+//                Pair(R.drawable.ic_sort_alphabetical_ascending, "Alphabetical Ascending"),
+//                Pair(R.drawable.ic_sort_alphabetical_descending, "Alphabetical Descending"),
+//                Pair(R.drawable.ic_sort_clock_ascending, "Date Ascending"),
+//                Pair(R.drawable.ic_sort_clock_descending, "Date Descending"),
+//                Pair(R.drawable.ic_sort_bool_ascending_variant, "UnFinished First"),
+//                Pair(R.drawable.ic_sort_bool_descending_variant, "Completed Tasks First"),
+//            )
+//        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun DialogPreview4() {
+    ToDoListTheme {
+//        SelectorSingleItem(R.drawable.ic_sort_alphabetical_ascending, "Alphabetical Ascending"){}
+        SelectorDialog(
+            "Sort Task By",
+            listOf(
+                Pair(R.drawable.ic_sort_alphabetical_ascending, "Alphabetical Ascending"),
+                Pair(R.drawable.ic_sort_alphabetical_descending, "Alphabetical Descending"),
+                Pair(R.drawable.ic_sort_clock_ascending, "Date Ascending"),
+                Pair(R.drawable.ic_sort_clock_descending, "Date Descending"),
+                Pair(R.drawable.ic_sort_bool_ascending_variant, "UnFinished First"),
+                Pair(R.drawable.ic_sort_bool_descending_variant, "Completed Tasks First"),
+            ), {}
+        )
     }
 }

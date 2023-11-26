@@ -1,12 +1,15 @@
 package com.s2bytes.todolist.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -23,10 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.s2bytes.todolist.R
 import com.s2bytes.todolist.data.ToDoMessage
 import com.s2bytes.todolist.data.fakeTaskList
 import com.s2bytes.todolist.ui.theme.ToDoListTheme
@@ -84,7 +89,16 @@ fun ToDoList(
     onMsgClicked: (ToDoMessage)->Unit={}, headerMap:Map<Int,String> = HashMap(),
     listState:LazyListState = rememberLazyListState()
 ){
-    LazyColumn(modifier.padding(10.dp), listState){
+    if (msgList.isEmpty()) {
+        Column(
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text("No Tasks available!", style = MaterialTheme.typography.titleLarge)
+        }
+    }
+    else LazyColumn(modifier.padding(10.dp), listState){
         itemsIndexed(msgList){idx,msg ->
             if(headerMap.containsKey(idx))
                 ItemHeader(headerMap[idx]!!, Modifier.padding(start=5.dp))

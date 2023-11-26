@@ -47,7 +47,7 @@ fun sortToDoListBy(msgList:List<ToDoMessage>, sortBy:SortTaskBy): Pair<List<ToDo
     return Pair(sortedList, headerMap)
 }
 
-val fakeTaskList = mutableListOf(
+val fakeTaskList = mutableListOf<ToDoMessage>(
     ToDoMessage("Upload Release","The long 10Days Development v1.2.6 has finally completed," +
             " and we need to upload this as soon as we can," +
             " to get this shit out of out mind", timeStamp = 1700238297
