@@ -8,11 +8,26 @@ data class ToDoMessage(
     val title: String,
     val desc: String = "", val isDone: Boolean = false,
     val timeStamp: Long = System.currentTimeMillis()
-)
+){
+
+    fun encode() = "$title<&>$desc<&>${if(isDone) 1 else 0}<&>$timeStamp"
+    companion object {
+        fun decode(from: String): ToDoMessage {
+            val dList = from.split("<&>")
+            return ToDoMessage(
+                dList[0], dList[1], dList[2] == "1",
+                dList[3].toLongOrNull() ?: 0
+            )
+        }
+    }
+
+    override fun equals(other: Any?) = other is ToDoMessage && other.timeStamp == timeStamp
+    override fun hashCode() = timeStamp.hashCode()
+}
 
 
 enum class SortTaskBy(val type:Int, val isDescending:Boolean = false){
-    ByIsChecked(1), ByIsUnchecked(1, true),
+    ByIsUnchecked(1, true), ByIsChecked(1),
     ByDate(2), ByDateDescending(2, true),
     ByTitle(3), ByTitleDescending(3, true),
 }

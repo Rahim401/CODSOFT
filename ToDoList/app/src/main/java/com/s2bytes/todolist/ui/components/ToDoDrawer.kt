@@ -141,8 +141,8 @@ fun ToDoDrawerSheet(
             DrawerItem("Tasks Completed: ${(tasksRatio*100).toInt()}%"){ onItemClicked("TaskRatio") }
             DividerItem()
 
-            DrawerItem("Sort Tasks By", R.drawable.ic_sort){ onItemClicked("Sort") }
-            DrawerItem("Clear All Tasks", R.drawable.ic_delete_sweep){ onItemClicked("Delete") }
+            DrawerItem("Sort Tasks By", R.drawable.ic_sort){ onItemClicked("SortTasks") }
+            DrawerItem("Clear All Tasks", R.drawable.ic_delete_sweep){ onItemClicked("ClearAll") }
         }
     }
 }

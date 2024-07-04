@@ -1,14 +1,12 @@
 package com.s2bytes.todolist.ui.components
 
 import android.content.res.Configuration
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -16,12 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -180,27 +174,30 @@ fun ToDoEditor(
 
 @Composable
 fun SelectorSingleItem(
-    iconId:Int, name:String,
+    iconId:Int, name:String, isSelected:Boolean,
     onClick: ()-> Unit
 ) {
+    val backAlpha = if(isSelected) 0.8f else 0.2f
+    val contentColor = if(isSelected) MaterialTheme.colorScheme.onPrimary else Color.Black
     Row(
         modifier = Modifier.clip(ShapeDefaults.Medium)
-            .background(MaterialTheme.colorScheme.primary.copy(0.2f))
+            .background(MaterialTheme.colorScheme.primary.copy(backAlpha))
             .clickable { onClick() }.fillMaxWidth().padding(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
         Icon(
             painterResource(iconId),null,
-            modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp)
+            modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp),
+            tint = contentColor
         )
-        Text(name)
+        Text(name, color = contentColor)
     }
 }
 
 @Composable
 fun SelectorDialog(
     title:String, options: List<Pair<Int,String>>,
-    onSelected: (Int) -> Unit,
+    selected: Int = -1, onSelected: (Int) -> Unit,
     onDismiss: () -> Unit = {}
 ) {
 
@@ -224,7 +221,7 @@ fun SelectorDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ){
                     itemsIndexed(options){idx,(iconId,name) ->
-                        SelectorSingleItem(iconId,name){
+                        SelectorSingleItem(iconId,name, idx==selected){
                             onSelected(idx)
                         }
                     }
@@ -253,7 +250,7 @@ fun DialogPreview() {
 @Composable
 fun DialogPreview2() {
     ToDoListTheme {
-        SelectorSingleItem(R.drawable.ic_sort_alphabetical_ascending, "Alphabetical Ascending"){}
+        SelectorSingleItem(R.drawable.ic_sort_alphabetical_ascending, "Alphabetical Ascending",false){}
 //        ToDoSelectorDialog(
 //            listOf(
 //                Pair(R.drawable.ic_sort_alphabetical_ascending, "Alphabetical Ascending"),
@@ -281,7 +278,7 @@ fun DialogPreview4() {
                 Pair(R.drawable.ic_sort_clock_descending, "Date Descending"),
                 Pair(R.drawable.ic_sort_bool_ascending_variant, "UnFinished First"),
                 Pair(R.drawable.ic_sort_bool_descending_variant, "Completed Tasks First"),
-            ), {}
+            ), 3, onSelected = {}
         )
     }
 }

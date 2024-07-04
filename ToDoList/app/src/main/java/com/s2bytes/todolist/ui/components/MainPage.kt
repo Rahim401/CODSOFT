@@ -4,15 +4,18 @@ package com.s2bytes.todolist.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,12 +26,15 @@ import com.s2bytes.todolist.data.deleteTask
 import com.s2bytes.todolist.data.fakeTaskList
 import com.s2bytes.todolist.data.sortToDoListBy
 import com.s2bytes.todolist.ui.theme.ToDoListTheme
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(){
+    val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val isOnTop = remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
 
     var createTask by remember{ mutableStateOf(false) }
@@ -54,10 +60,22 @@ fun HomePage(){
         )
 
     ModalNavigationDrawer(
-        { ToDoDrawerSheet(.53f) },
+        drawerContent = { ToDoDrawerSheet(.53f) },
+        drawerState = drawerState
     ) {
         Scaffold(
-            topBar = { ToDoAppBar() },
+            topBar = {
+                println("Ommbu1 $drawerState")
+                ToDoAppBar(
+                    onNavClicked = {
+                        println("Ommbu $drawerState")
+                        if(!drawerState.isAnimationRunning) coroutineScope.launch {
+                            if(drawerState.isClosed) drawerState.open()
+                            else drawerState.close()
+                        }
+                    }
+                )
+            },
             floatingActionButton = {
                 ToDoAction({ createTask = true }, isExpanded = isOnTop.value)
            },
